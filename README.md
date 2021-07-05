@@ -1,6 +1,6 @@
 <p align="center">
     <a href="#">
-        <img src="assets/logo.png" height="70" alt="ADMO core processor">
+        <img src="assets/logo-b1.png" height="70" alt="ADMO core processor">
     </a>
 </p>
 
