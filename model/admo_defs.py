@@ -1,4 +1,5 @@
 ################################################################################
+#
 # MIT License
 # 
 # Copyright (c) 2021 Gustavo Ale
@@ -20,17 +21,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
 ################################################################################
 
-PWD=$(shell pwd)
-HDLDIR=$(PWD)/../hdl
-
-export PYTHONPATH := $(PWD)/../model:$(PYTHONPATH)
-
-TOPLEVEL_LANG = verilog
-VERILOG_SOURCES = $(HDLDIR)/admo_alu.v $(HDLDIR)/admo_defs.v 
-MODULE = admo_alu_sim
-TOPLEVEL = admo_alu
-COMPILE_ARGS=-I$(HDLDIR)
-
-include $(shell cocotb-config --makefiles)/Makefile.sim
+ALU_ADD = 0b0000
+ALU_SUB = 0b1000 
+ALU_XOR = 0b0100
+ALU_OR  = 0b0110 
+ALU_AND = 0b0111 
+ALU_SLL = 0b0001
+ALU_SRL = 0b0101
+ALU_SRA = 0b1101
+ALU_LTS = 0b0010
+ALU_LTU = 0b0011

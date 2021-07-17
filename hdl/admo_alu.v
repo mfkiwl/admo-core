@@ -33,8 +33,8 @@ module admo_alu
     input   [3:0]               alu_op,
     output  [`DATA_WIDTH-1:0]   alu_res
 );
-    reg [`DATA_WIDTH-1:0]   result_reg;
-    wire [`DATA_WIDTH-1:0]  sub_w;
+    reg     [`DATA_WIDTH-1:0]   result_reg;
+    wire    [`DATA_WIDTH-1:0]  sub_w;
 
 
     assign sub_w = alu_a - alu_b;
@@ -64,6 +64,10 @@ module admo_alu
             end
             `ALU_XOR: begin
                 result_reg = alu_a ^ alu_b;
+            end
+            default:
+            begin
+                result_reg = alu_a;
             end
         endcase
     end

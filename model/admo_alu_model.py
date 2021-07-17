@@ -1,4 +1,5 @@
 ################################################################################
+#
 # MIT License
 # 
 # Copyright (c) 2021 Gustavo Ale
@@ -20,17 +21,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+#
 ################################################################################
 
-PWD=$(shell pwd)
-HDLDIR=$(PWD)/../hdl
+from admo_defs import *
 
-export PYTHONPATH := $(PWD)/../model:$(PYTHONPATH)
+def srl(a: int,b: int) -> int:
+    if(a < 0 and b != 0):
+        return ((a >> 1) & 0x7FFFFFFF) >> (b-1)
+    return a >> b
 
-TOPLEVEL_LANG = verilog
-VERILOG_SOURCES = $(HDLDIR)/admo_alu.v $(HDLDIR)/admo_defs.v 
-MODULE = admo_alu_sim
-TOPLEVEL = admo_alu
-COMPILE_ARGS=-I$(HDLDIR)
-
-include $(shell cocotb-config --makefiles)/Makefile.sim
+def admo_alu_model(alu_a: int, alu_b: int, alu_op: int) -> int:
+    return {
+        ALU_ADD: alu_a + alu_b,
+        ALU_SUB: alu_a - alu_b,
+        ALU_AND: alu_a & alu_b,
+        ALU_OR:  alu_a | alu_b,
+        ALU_XOR: alu_a ^ alu_b,  
+        # ALU_SLL: alu_a << alu_b,  
+        # ALU_SRL: srl(alu_a,alu_b),
+        # ALU_SRA: alu_a >> alu_b,  
+    }.get(alu_op,alu_a) & 0xFFFFFFFF
