@@ -24,7 +24,7 @@ SOFTWARE.
 
 *******************************************************************************/
 
-`include "admo_macros.v"
+`include "admo_defs.v"
 
 module admo_alu
 (
@@ -33,12 +33,39 @@ module admo_alu
     input   [3:0]               alu_op,
     output  [`DATA_WIDTH-1:0]   alu_res
 );
+    reg [`DATA_WIDTH-1:0]   result_reg;
+    wire [`DATA_WIDTH-1:0]  sub_w;
 
-    assign alu_res = alu_a + alu_b;
+
+    assign sub_w = alu_a - alu_b;
+    assign alu_res = result_reg;
+
 
     always @(alu_a or alu_b or alu_op) 
     begin    
-    
+        case(alu_op)
+            //**************************************
+            // ARITHMETIC
+            //**************************************
+            `ALU_ADD: begin
+                result_reg = (alu_a + alu_b);
+            end
+            `ALU_SUB: begin 
+                result_reg = sub_w;
+            end
+            //**************************************
+            // BITWISE
+            //**************************************
+            `ALU_AND: begin
+                result_reg = alu_a & alu_b;
+            end
+            `ALU_OR: begin
+                result_reg = alu_a | alu_b;
+            end
+            `ALU_XOR: begin
+                result_reg = alu_a ^ alu_b;
+            end
+        endcase
     end
 
 endmodule 

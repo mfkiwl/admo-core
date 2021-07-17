@@ -1,11 +1,19 @@
 <p align="center">
     <a href="#">
-        <img src="assets/logo-b1.png" height="70" alt="ADMO core processor">
+        <img src="assets/logo.png" height="70" alt="ADMO core processor">
     </a>
 </p>
 
 
 ---
+
+## Directories
+- `/assets` images, logos and project graphical resources
+- `/cosim` cocotb cosimulation source 
+- `/hdl` HDL sources
+- `/model` Behavioral model written in Python 
+- `/tb` HDL testbench
+
 ## Author
 
 * Author: Gustavo Ale
