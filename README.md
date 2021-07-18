@@ -13,6 +13,7 @@
 - `/hdl` HDL sources
 - `/model` Behavioral model written in Python 
 - `/tb` HDL testbench
+- `/wave` VCD waveform from cosimulation
 
 ## Author
 

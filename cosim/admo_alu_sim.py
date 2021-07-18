@@ -33,19 +33,19 @@ from admo_alu_model import admo_alu_model
 async def admo_alu_test(mod):
     """ Test admo_alu """
     
-    mod.alu_op = 1
-    for i in range(10000):
+    for i in range(100):
         val_a = random.randint(0,1<<32)
         val_b = random.randint(0,1<<32)
         val_op = random.randint(0,16) & 0b1111
         # val_op = 0
         val_res = admo_alu_model(val_a,val_b,val_op)
 
-        mod.alu_a <= val_a 
-        mod.alu_b <= val_b
-        mod.alu_op <= val_op
+        mod.operand_a_i <= val_a 
+        mod.operand_b_i <= val_b
+        mod.operator_i <= val_op
 
         await Timer(1, units='ns')
-        assert mod.alu_res == val_res, \
+        
+        assert mod.result_o == val_res, \
         f"[{i}] - incorrect for A: {val_a}, B: {val_b}, OP: {val_op} \n"\
-        f"Expected {val_res}, returned: {mod.alu_res.value+0}"
+        f"Expected {val_res}, returned: {mod.result_o.value+0}"
