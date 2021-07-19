@@ -4,6 +4,18 @@
     </a>
 </p>
 
+<p align="center">
+    <a href="#">
+    <img src="https://img.shields.io/github/repo-size/gustavoale/admo-core?style=for-the-badge"
+    style="max-width:100%;" alt="Repo size">
+    </a>
+    <a href="/LICENSE">
+        <img src="https://img.shields.io/github/last-commit/gustavoale/admo-core?style=for-the-badge" style="max-width:100%;" alt="Repo size">
+    </a>
+    <a href="#">
+    <img src="https://img.shields.io/github/languages/top/gustavoale/admo-core?style=for-the-badge" style="max-width:100%;" alt="Repo size">
+    </a>
+</p>
 
 ---
 
