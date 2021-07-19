@@ -40,14 +40,20 @@ module admo_alu
     reg     [`DATA_WIDTH-1:0]   shift_stage_1;
     reg     [`DATA_WIDTH-1:0]   shift_stage_2;
     reg     [`DATA_WIDTH-1:0]   shift_stage_3;
-
+    
     wire    [`DATA_WIDTH-1:0]   sub_res;
+    reg    compl_bit;
+
 
     assign sub_res = operand_a_i - operand_b_i;
+    // assign compl_bit = 1'b0;
+    // assign compl_bit = operand_a_i[31] & operator_i[3];
+
     assign result_o = result_reg;
 
     always @(operand_a_i or operand_b_i or operator_i) 
     begin    
+        compl_bit = operand_a_i[31] & operator_i[3];
         case(operator_i)
             //**************************************
             // ARITHMETIC
@@ -55,60 +61,106 @@ module admo_alu
             `ALU_ADD: begin
                 result_reg = (operand_a_i + operand_b_i);
             end
+
             `ALU_SUB: begin 
                 result_reg = sub_res;
             end
+
             //**************************************
             // BITWISE
             //**************************************
             `ALU_AND: begin
                 result_reg = operand_a_i & operand_b_i;
             end
+
             `ALU_OR: begin
                 result_reg = operand_a_i | operand_b_i;
             end
+
             `ALU_XOR: begin
                 result_reg = operand_a_i ^ operand_b_i;
             end
+
             //**************************************
             // SHIFT
             //**************************************
-            // `ALU_SLL: begin
-            //     result_reg = operand_a_i <<< operand_b_i;
-            //     // if(operand_b_i[0] == 1'b1) begin
-            //     //     shift_stage_0 = {operand_a_i[30:0],1'b0};
-            //     // end else begin
-            //     //     shift_stage_0 = operand_a_i;
-            //     // end
+            `ALU_SLL: begin
+                // result_reg = operand_a_i <<< operand_b_i;
+                if(operand_b_i[0] == 1'b1) begin
+                    shift_stage_0 = {operand_a_i[30:0],1'b0};
+                end else begin
+                    shift_stage_0 = operand_a_i;
+                end
 
-            //     // if(operand_b_i[1] == 1'b1) begin
-            //     //     shift_stage_1 = {shift_stage_0[29:0],2'b00};
-            //     // end else begin
-            //     //     shift_stage_1 = shift_stage_0;
-            //     // end
+                if(operand_b_i[1] == 1'b1) begin
+                    shift_stage_1 = {shift_stage_0[29:0],2'b00};
+                end else begin
+                    shift_stage_1 = shift_stage_0;
+                end
 
-            //     // if(operand_b_i[2] == 1'b1) begin
-            //     //     shift_stage_2 = {shift_stage_1[27:0],4'b0000};
-            //     // end else begin
-            //     //     shift_stage_2 = shift_stage_1;
-            //     // end
+                if(operand_b_i[2] == 1'b1) begin
+                    shift_stage_2 = {shift_stage_1[27:0],4'b0000};
+                end else begin
+                    shift_stage_2 = shift_stage_1;
+                end
 
-            //     // if(operand_b_i[3] == 1'b1) begin
-            //     //     shift_stage_3 = {shift_stage_2[23:0],8'b00000000};
-            //     // end else begin
-            //     //     shift_stage_3 = shift_stage_2;
-            //     // end 
+                if(operand_b_i[3] == 1'b1) begin
+                    shift_stage_3 = {shift_stage_2[23:0],8'b00000000};
+                end else begin
+                    shift_stage_3 = shift_stage_2;
+                end 
 
-            //     // // if(operand_b_i[31:5]) begin
-            //     // //     result_reg = {32{1'b0}};
-            //     // // end else begin 
-            //     //     if(operand_b_i[4] == 1'b1) begin
-            //     //         result_reg = {shift_stage_3[15:0],16'b0000000000000000};
-            //     //     end else begin 
-            //     //         result_reg = shift_stage_3;
-            //     //     end
-            //     // // end
+                if(operand_b_i[4] == 1'b1) begin
+                    result_reg = {shift_stage_3[15:0],16'b0000000000000000};
+                end else begin 
+                    result_reg = shift_stage_3;
+                end
+            end
+            
+            `ALU_SRL, `ALU_SRA: begin 
+                if(operand_b_i[0] == 1'b1) begin
+                    shift_stage_0 = {{1{compl_bit}}, operand_a_i[31:1]};
+                end else begin
+                    shift_stage_0 = operand_a_i;
+                end
+
+                if(operand_b_i[1] == 1'b1) begin
+                    shift_stage_1 = {{2{compl_bit}}, shift_stage_0[31:2]};
+                end else begin
+                    shift_stage_1 = shift_stage_0;
+                end
+
+                if(operand_b_i[2] == 1'b1) begin
+                    shift_stage_2 = {{4{compl_bit}}, shift_stage_1[31:4]};
+                end else begin
+                    shift_stage_2 = shift_stage_1;
+                end
+
+                if(operand_b_i[3] == 1'b1) begin
+                    shift_stage_3 = {{8{compl_bit}}, shift_stage_2[31:8]};
+                end else begin
+                    shift_stage_3 = shift_stage_2;
+                end
+
+                if(operand_b_i[4] == 1'b1) begin
+                    result_reg = {{16{compl_bit}}, shift_stage_3[31:16]};
+                end else begin
+                    result_reg = shift_stage_3;
+                end
+            end
+            
+            //**************************************
+            // COMPARATOR
+            //**************************************
+            `ALU_LTS: begin
+                result_reg = sub_res[31];
+            end
+
+            // `ALU_LTU: begin
+            //     result_
             // end
+            
+
             default: begin
                 result_reg = operand_a_i;
             end

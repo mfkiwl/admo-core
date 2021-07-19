@@ -33,7 +33,7 @@ from admo_alu_model import admo_alu_model
 async def admo_alu_test(mod):
     """ Test admo_alu """
     
-    for i in range(100):
+    for i in range(10000):
         val_a = random.randint(0,1<<32)
         val_b = random.randint(0,1<<32)
         val_op = random.randint(0,16) & 0b1111
@@ -47,5 +47,5 @@ async def admo_alu_test(mod):
         await Timer(1, units='ns')
         
         assert mod.result_o == val_res, \
-        f"[{i}] - incorrect for A: {val_a}, B: {val_b}, OP: {val_op} \n"\
-        f"Expected {val_res}, returned: {mod.result_o.value+0}"
+        f"[{i}] - incorrect for A: {hex(val_a)}, B: {hex(val_b)}, OP: {hex(val_op)} \n"\
+        f"Expected {hex(val_res)}, returned: {hex(mod.result_o.value+0)}"
