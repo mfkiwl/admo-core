@@ -152,14 +152,25 @@ module admo_alu
             //**************************************
             // COMPARATOR
             //**************************************
-            `ALU_LTS: begin
-                result_reg = sub_res[31];
+            `ALU_LTS, `ALU_LTU: begin
+                if(operand_a_i[31] == operand_b_i[31]) begin
+                    result_reg = sub_res[31];
+                end else begin
+                    if(operator_i == `ALU_LTU) begin
+                        result_reg = !operand_a_i[31];
+                    end else begin
+                        result_reg = operand_a_i[31];
+                    end
+                end
             end
 
             // `ALU_LTU: begin
-            //     result_
+            //     if(operand_a_i[31] == operand_b_i[31]) begin
+            //         result_reg = sub_res[31];
+            //     end else begin
+            //         result_reg = !operand_a_i[31];
+            //     end
             // end
-            
 
             default: begin
                 result_reg = operand_a_i;

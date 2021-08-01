@@ -59,7 +59,8 @@ def admo_alu_model(alu_a: int, alu_b: int, alu_op: int) -> int:
         ALU_SLL: alu_a << (alu_b & 0x1F),  
         ALU_SRL: alu_a >> (alu_b & 0x1F),
         ALU_SRA: sra(alu_a,alu_b & 0x1F),
-        ALU_LTS: lts(alu_a,alu_b)
+        ALU_LTS: lts(alu_a,alu_b),
+        ALU_LTU: alu_a < alu_b,
         # ALU_SRL: srl(alu_a,alu_b & 0x1F),
         # ALU_SRA: alu_a >> (alu_b & 0x1F),  
     }.get(alu_op,alu_a) & 0xFFFFFFFF
