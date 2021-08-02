@@ -1,0 +1,8 @@
+read -sv ../hdl/admo_alu.v
+hierarchy -top admo_alu; 
+proc_arst
+proc_dff
+techmap
+opt
+stat -tech cmos
+shell

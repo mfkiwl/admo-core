@@ -1,0 +1,5 @@
+read -sv ../hdl/admo_alu.v
+hierarchy -top admo_alu; 
+synth_xilinx
+stat -tech xilinx
+shell

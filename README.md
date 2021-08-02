@@ -24,6 +24,7 @@
 - `/cosim` cocotb cosimulation source 
 - `/hdl` HDL sources
 - `/model` Behavioral model written in Python 
+- `/synth` YOSYS synthesys scripts
 - `/tb` HDL testbench
 - `/wave` VCD waveform from cosimulation
 

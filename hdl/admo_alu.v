@@ -41,29 +41,39 @@ module admo_alu
     reg     [`DATA_WIDTH-1:0]   shift_stage_2;
     reg     [`DATA_WIDTH-1:0]   shift_stage_3;
     
-    wire    [`DATA_WIDTH-1:0]   sub_res;
-    reg    compl_bit;
+    //**************************************
+    // ADDER/SUBTRACTOR
+    //**************************************
 
+    wire    [`DATA_WIDTH:0]     adder_res;
+    wire    [`DATA_WIDTH:0]     adder_a;
+    reg     [`DATA_WIDTH:0]     adder_b;
+    
+    assign adder_a = {operand_a_i,1'b1};
+    assign adder_res = adder_a + adder_b;
+    
+    always @(operand_b_i or operator_i) begin
+        case(operator_i)
+            `ALU_SUB, 
+            `ALU_LTS, 
+            `ALU_LTU: adder_b = {operand_b_i,1'b0} ^ {33{1'b1}};
+            default: adder_b = {operand_b_i,1'b0};
+        endcase
+    end
 
-    assign sub_res = operand_a_i - operand_b_i;
-    // assign compl_bit = 1'b0;
-    // assign compl_bit = operand_a_i[31] & operator_i[3];
-
+    reg     compl_bit;
     assign result_o = result_reg;
 
-    always @(operand_a_i or operand_b_i or operator_i) 
+    always @(operand_a_i or operand_b_i or operator_i or adder_res) 
     begin    
         compl_bit = operand_a_i[31] & operator_i[3];
+
         case(operator_i)
             //**************************************
             // ARITHMETIC
             //**************************************
-            `ALU_ADD: begin
-                result_reg = (operand_a_i + operand_b_i);
-            end
-
-            `ALU_SUB: begin 
-                result_reg = sub_res;
+            `ALU_ADD, `ALU_SUB: begin 
+                result_reg = adder_res[32:1];
             end
 
             //**************************************
@@ -154,7 +164,7 @@ module admo_alu
             //**************************************
             `ALU_LTS, `ALU_LTU: begin
                 if(operand_a_i[31] == operand_b_i[31]) begin
-                    result_reg = sub_res[31];
+                    result_reg = adder_res[32];
                 end else begin
                     if(operator_i == `ALU_LTU) begin
                         result_reg = !operand_a_i[31];
@@ -164,20 +174,11 @@ module admo_alu
                 end
             end
 
-            // `ALU_LTU: begin
-            //     if(operand_a_i[31] == operand_b_i[31]) begin
-            //         result_reg = sub_res[31];
-            //     end else begin
-            //         result_reg = !operand_a_i[31];
-            //     end
-            // end
-
             default: begin
-                result_reg = operand_a_i;
+                result_reg = adder_res[32:1];
             end
         endcase
     end
-
 
     `ifdef COCOTB_SIM
     initial begin

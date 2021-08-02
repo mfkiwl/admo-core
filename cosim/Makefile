@@ -26,11 +26,19 @@ PWD=$(shell pwd)
 HDLDIR=$(PWD)/../hdl
 
 export PYTHONPATH := $(PWD)/../model:$(PYTHONPATH)
-
-TOPLEVEL_LANG = verilog
-VERILOG_SOURCES = $(HDLDIR)/admo_alu.v $(HDLDIR)/admo_defs.v 
-MODULE = admo_alu_sim
-TOPLEVEL = admo_alu
 COMPILE_ARGS=-I$(HDLDIR)
+TOPLEVEL_LANG = verilog
+
+ifeq ($(HDL),admo_alu)
+	VERILOG_SOURCES = $(HDLDIR)/admo_alu.v $(HDLDIR)/admo_defs.v 
+	MODULE = admo_alu_sim
+	TOPLEVEL = admo_alu
+endif 
+
+ifeq ($(HDL),test_add)
+	VERILOG_SOURCES = $(HDLDIR)/test_add.v $(HDLDIR)/admo_defs.v 
+	MODULE = test_add_sim
+	TOPLEVEL = test_add
+endif
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
