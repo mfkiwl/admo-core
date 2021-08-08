@@ -31,6 +31,7 @@ module admo_alu
     input   [`DATA_WIDTH-1:0]   operand_a_i,
     input   [`DATA_WIDTH-1:0]   operand_b_i,
     input   [3:0]               operator_i,
+    // input   [$clog2(`DATA_WIDTH):0] shamt,
     output  [`DATA_WIDTH-1:0]   result_o
 );
 
@@ -49,31 +50,31 @@ module admo_alu
     wire    [`DATA_WIDTH:0]     adder_a;
     reg     [`DATA_WIDTH:0]     adder_b;
     
-    assign adder_a = {operand_a_i,1'b1};
-    assign adder_res = adder_a + adder_b;
+    assign  adder_a = {operand_a_i,1'b1};
+    assign  adder_res = adder_a + adder_b;
     
     always @(operand_b_i or operator_i) begin
         case(operator_i)
             `ALU_SUB, 
             `ALU_LTS, 
-            `ALU_LTU: adder_b = {operand_b_i,1'b0} ^ {33{1'b1}};
+            `ALU_LTU: adder_b = {operand_b_i,1'b0} ^ {`DATA_WIDTH+1{1'b1}};
             default: adder_b = {operand_b_i,1'b0};
         endcase
     end
 
     reg     compl_bit;
-    assign result_o = result_reg;
+    assign  result_o = result_reg;
 
     always @(operand_a_i or operand_b_i or operator_i or adder_res) 
     begin    
-        compl_bit = operand_a_i[31] & operator_i[3];
+        compl_bit = operand_a_i[`DATA_WIDTH-1] & operator_i[3];
 
         case(operator_i)
             //**************************************
             // ARITHMETIC
             //**************************************
             `ALU_ADD, `ALU_SUB: begin 
-                result_reg = adder_res[32:1];
+                result_reg = adder_res[`DATA_WIDTH:1];
             end
 
             //**************************************

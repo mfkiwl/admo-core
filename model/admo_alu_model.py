@@ -64,3 +64,4 @@ def admo_alu_model(alu_a: int, alu_b: int, alu_op: int) -> int:
         # ALU_SRL: srl(alu_a,alu_b & 0x1F),
         # ALU_SRA: alu_a >> (alu_b & 0x1F),  
     }.get(alu_op,alu_a+alu_b) & 0xFFFFFFFF
+
