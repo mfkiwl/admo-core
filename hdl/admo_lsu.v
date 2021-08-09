@@ -26,9 +26,18 @@ SOFTWARE.
 
 `include "admo_defs.v"
 
-module admo_lsu
+module admo_lsu 
+#(
+    parameter DEPTH             = 512,
+    parameter DATA_WIDTH        = 32,
+    parameter ADDR_WIDTH        = 5,
+)
 (
-
+    input   [DATA_WIDTH-1:0]    data_i,
+    input   [ADDR_WIDTH-1:0]    addr_i,
+    input                       rw_i,
+    input   [1:0]               len_i,
+    output  [DATA_WIDTH-1:0]    data_o,
 );
 
 endmodule

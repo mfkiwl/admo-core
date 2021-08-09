@@ -27,7 +27,7 @@ SOFTWARE.
 //**************************************
 // GENERAL DEFINES
 //**************************************
-`define DATA_WIDTH  32
+// `define DATA_WIDTH  32
 `define ILEN        32
 `define IALIGN      32
 
@@ -38,6 +38,7 @@ SOFTWARE.
 //`define ALU_NOP             4'b0000
 // OPCODE[2:0]  <= RISC-V FUNC3
 // OPCODE[3]    <= RISC-V FUNC7[5] IF PRESENT ELSE 1'b0
+// (test) OPCODE[3]    <= 1'b1 IF need two-complement, ELSE 1'b0
 `define ALU_ADD     4'b0000
 `define ALU_SUB     4'b1000 
 `define ALU_XOR     4'b0100

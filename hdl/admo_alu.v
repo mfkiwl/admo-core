@@ -27,28 +27,37 @@ SOFTWARE.
 `include "admo_defs.v"
 
 module admo_alu
+#(
+    parameter DATA_WIDTH = 32
+)
 (
-    input   [`DATA_WIDTH-1:0]   operand_a_i,
-    input   [`DATA_WIDTH-1:0]   operand_b_i,
+    input   [DATA_WIDTH-1:0]    operand_a_i,
+    input   [DATA_WIDTH-1:0]    operand_b_i,
     input   [3:0]               operator_i,
-    // input   [$clog2(`DATA_WIDTH):0] shamt,
-    output  [`DATA_WIDTH-1:0]   result_o
+    // input   [$clog2(DATA_WIDTH):0] shamt,
+    output  [DATA_WIDTH-1:0]   result_o
 );
 
-    reg     [`DATA_WIDTH-1:0]   result_reg;
+    //**************************************
+    // SHIFTER RELATED
+    //**************************************
 
-    reg     [`DATA_WIDTH-1:0]   shift_stage_0;
-    reg     [`DATA_WIDTH-1:0]   shift_stage_1;
-    reg     [`DATA_WIDTH-1:0]   shift_stage_2;
-    reg     [`DATA_WIDTH-1:0]   shift_stage_3;
-    
+    reg     [DATA_WIDTH-1:0]    shift_stage_0;
+    reg     [DATA_WIDTH-1:0]    shift_stage_1;
+    reg     [DATA_WIDTH-1:0]    shift_stage_2;
+    reg     [DATA_WIDTH-1:0]    shift_stage_3;
+    reg     compl_bit;
+
+    // reg     [DATA_WIDTH-1:0]    shift_stage [$clog2(DATA_WIDTH)-1:0];
+    // integer stage;
+        
     //**************************************
     // ADDER/SUBTRACTOR
     //**************************************
 
-    wire    [`DATA_WIDTH:0]     adder_res;
-    wire    [`DATA_WIDTH:0]     adder_a;
-    reg     [`DATA_WIDTH:0]     adder_b;
+    wire    [DATA_WIDTH:0]     adder_res;
+    wire    [DATA_WIDTH:0]     adder_a;
+    reg     [DATA_WIDTH:0]     adder_b;
     
     assign  adder_a = {operand_a_i,1'b1};
     assign  adder_res = adder_a + adder_b;
@@ -57,24 +66,24 @@ module admo_alu
         case(operator_i)
             `ALU_SUB, 
             `ALU_LTS, 
-            `ALU_LTU: adder_b = {operand_b_i,1'b0} ^ {`DATA_WIDTH+1{1'b1}};
+            `ALU_LTU: adder_b = {operand_b_i,1'b0} ^ {DATA_WIDTH+1{1'b1}};
             default: adder_b = {operand_b_i,1'b0};
         endcase
     end
 
-    reg     compl_bit;
+    reg     [DATA_WIDTH-1:0]   result_reg;
+   
     assign  result_o = result_reg;
 
     always @(operand_a_i or operand_b_i or operator_i or adder_res) 
     begin    
-        compl_bit = operand_a_i[`DATA_WIDTH-1] & operator_i[3];
-
+        compl_bit = operand_a_i[DATA_WIDTH-1] & operator_i[3];
         case(operator_i)
             //**************************************
             // ARITHMETIC
             //**************************************
             `ALU_ADD, `ALU_SUB: begin 
-                result_reg = adder_res[`DATA_WIDTH:1];
+                result_reg = adder_res[DATA_WIDTH:1];
             end
 
             //**************************************
@@ -96,7 +105,21 @@ module admo_alu
             // SHIFT
             //**************************************
             `ALU_SLL: begin
-                // result_reg = operand_a_i <<< operand_b_i;
+                // if(operand_b_i[0] == 1'b1) begin
+                //     shift_stage[0] = {operand_a_i[DATA_WIDTH-2:0],1'b0};
+                // end else begin
+                //     shift_stage[0] = operand_a_i;
+                // end
+
+                // for (stage=1; stage<$clog2(DATA_WIDTH); stage=stage+1) begin 
+                //     if(operand_b_i[stage] == 1'b1) begin
+                //         shift_stage[stage] = {shift_stage[stage-1][DATA_WIDTH-1-(2**stage)+:DATA_WIDTH],{DATA_WIDTH{1'b0}}};
+                //     end else begin
+                //         shift_stage[stage] = shift_stage[stage-1];
+                //     end
+                // end
+
+                // result_reg = shift_stage[$clog2(DATA_WIDTH)-1];
                 if(operand_b_i[0] == 1'b1) begin
                     shift_stage_0 = {operand_a_i[30:0],1'b0};
                 end else begin
