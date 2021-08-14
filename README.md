@@ -20,13 +20,13 @@
 ---
 
 ## Directories
-- `/assets` images, logos and project graphical resources
-- `/cosim` cocotb cosimulation source 
-- `/hdl` HDL sources
-- `/model` Behavioral model written in Python 
-- `/synth` YOSYS synthesys scripts
-- `/tb` HDL testbench
-- `/wave` VCD waveform from cosimulation
+- [`/assets`](assets/) images, logos and project graphical resources
+- [`/cosim`](cosim/) cocotb cosimulation source 
+- [`/hdl`](hdl/) HDL sources
+- [`/model`](model/) Behavioral model written in Python 
+- [`/synth`](synth/) YOSYS synthesys scripts
+- [`/tb`](tb/) HDL testbench
+- [`/wave`](wave/) VCD waveform from cosimulation
 
 ## Author
 
