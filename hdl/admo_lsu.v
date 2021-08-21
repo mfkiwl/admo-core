@@ -26,18 +26,21 @@ SOFTWARE.
 
 `include "admo_defs.v"
 
+//******************************************************************************
+// ADMO CORE LOAD-STORE UNIT
+//******************************************************************************
 module admo_lsu 
 #(
-    parameter DEPTH             = 512,
-    parameter DATA_WIDTH        = 32,
-    parameter ADDR_WIDTH        = 5,
+    parameter DEPTH                 = 512,
+    parameter DATA_WIDTH            = 32,
+    parameter ADDR_WIDTH            = 5,
 )
 (
-    input   [DATA_WIDTH-1:0]    data_i,
-    input   [ADDR_WIDTH-1:0]    addr_i,
-    input                       rw_i,
-    input   [1:0]               len_i,
-    output  [DATA_WIDTH-1:0]    data_o,
+    input  wire [DATA_WIDTH-1:0]    data_i,
+    input  wire [ADDR_WIDTH-1:0]    addr_i,
+    input  wire                     rw_i,
+    input  wire [1:0]               len_i,
+    output wire [DATA_WIDTH-1:0]    data_o,
 );
 
 endmodule

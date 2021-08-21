@@ -26,16 +26,19 @@ SOFTWARE.
 
 `include "admo_defs.v"
 
+//******************************************************************************
+// ADMO CORE ARITHMETIC LOGIC UNIT
+//******************************************************************************
 module admo_alu
 #(
     parameter DATA_WIDTH = 32
 )
 (
-    input   [DATA_WIDTH-1:0]    operand_a_i,
-    input   [DATA_WIDTH-1:0]    operand_b_i,
-    input   [3:0]               operator_i,
+    input  wire [DATA_WIDTH-1:0]    operand_a_i,
+    input  wire [DATA_WIDTH-1:0]    operand_b_i,
+    input  wire [3:0]               operator_i,
     // input   [$clog2(DATA_WIDTH):0] shamt,
-    output  [DATA_WIDTH-1:0]   result_o
+    output wire [DATA_WIDTH-1:0]    result_o
 );
 
     //**************************************
@@ -105,21 +108,6 @@ module admo_alu
             // SHIFT
             //**************************************
             `ALU_SLL: begin
-                // if(operand_b_i[0] == 1'b1) begin
-                //     shift_stage[0] = {operand_a_i[DATA_WIDTH-2:0],1'b0};
-                // end else begin
-                //     shift_stage[0] = operand_a_i;
-                // end
-
-                // for (stage=1; stage<$clog2(DATA_WIDTH); stage=stage+1) begin 
-                //     if(operand_b_i[stage] == 1'b1) begin
-                //         shift_stage[stage] = {shift_stage[stage-1][DATA_WIDTH-1-(2**stage)+:DATA_WIDTH],{DATA_WIDTH{1'b0}}};
-                //     end else begin
-                //         shift_stage[stage] = shift_stage[stage-1];
-                //     end
-                // end
-
-                // result_reg = shift_stage[$clog2(DATA_WIDTH)-1];
                 if(operand_b_i[0] == 1'b1) begin
                     shift_stage_0 = {operand_a_i[30:0],1'b0};
                 end else begin
